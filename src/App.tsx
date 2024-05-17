@@ -1,34 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ChangeEvent, FormEvent, useState } from "react"
+import ProductCard from "./components/ProductCard"
+import Modal from "./components/ui/Modal"
+import {FormList, ProductList} from './data'
+import Button from "./components/ui/Button"
+import BaseInput from "./components/ui/BaseInput"
+import { IProduct } from "./interface"
+const App =() => {
+  /** State   */
+  const defaultProductState = {
+    title:"",
+    description:"",
+    price:"",
+    imageUrl:"",
+    colors: [],
+    category:{
+        name:"",
+        image:""
+    }
+  }
+  const [isOpen, setIsOpen] = useState(false)
+  const [product,setProduct] = useState<IProduct>(defaultProductState)
+  /**  Handler  */
 
-function App() {
-  const [count, setCount] = useState(0)
+  const closeModal = () =>{
+    setIsOpen(false)
+    setProduct(defaultProductState)
+  }
+
+  const handleChangeInputs = (event:ChangeEvent<HTMLInputElement>) => {
+    const {value,name} = event.target
+    setProduct({
+      ...product,
+      [name]:value
+    })
+  }
+  const handleSubmitForm = (e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    closeModal()
+  }
+  const renderProductList = () => {
+    return ProductList.map((product) => <ProductCard product={product} key={product.id} /> )
+  }
+
+
+  const renderFormInputs =  FormList.map((input,idx) => (
+      <div key={idx} className="flex flex-col">
+        <label htmlFor={input.label} className="mb-[2px] text-sm font-medium text-gray-700">{input.label}</label>
+        <BaseInput type={input.type} id={input.id} name={input.name} value={product[input.name]} onChange={handleChangeInputs} />
+      </div>
+    ));
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className="container">
+      <Button classname="bg-indigo-700 hover:bg-indigo-800" onClick={()=> setIsOpen(true)}>Build Product</Button>
+      <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 p-2 rouneded-md">
+        {renderProductList()}
       </div>
-      <h1>Vite + React</h1>
-      <div className="text-3xl font-bold underline">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={"ADD A NEW PRODUCT"} closeModal={closeModal}>
+        <form className="space-y-3" onSubmit={handleSubmitForm}>
+          {renderFormInputs}
+          <div className="flex items-center space-x-3">
+            <Button typeButton="submit" classname="bg-indigo-700 hover:bg-indigo-800">Send</Button>
+            <Button classname="bg-gray-400 hover:bg-indigo-500" onClick={closeModal}>Cancel</Button>
+          </div>
+        </form>
+      </Modal>
+    </main>
   )
 }
 

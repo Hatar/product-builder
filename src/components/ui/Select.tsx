@@ -13,7 +13,7 @@ const classNames =(...classes: string[]) => {
 
 interface IProps {
 
-  selected: ICategory,
+  selected: {name:string,imageUrl:string},
   setSelected: (category:ICategory) => void
 }
 

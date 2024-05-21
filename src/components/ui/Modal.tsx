@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
+import { Dialog, DialogDescription, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { ReactNode } from 'react'
 
 
@@ -7,17 +7,17 @@ interface IProps {
     setIsOpen:(val:boolean) => void,
     closeModal:() => void,
     title:string,
+    description:string,
     children:ReactNode    
 }
-const Modal =({title,isOpen,setIsOpen,closeModal,children}:IProps) => {
+const Modal =({title,description,isOpen,children}:IProps) => {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)}>Open dialog</button>
       {/* Use the `Transition` component at the root level */}
       <Transition appear show={isOpen}>
         <Dialog as="div" className="relative z-10 focus:outline-none" onClose={close}>
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 backdrop-blur-sm  overflow-y-auto" aria-hidden="true">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <TransitionChild
                 enter="ease-out duration-300"
@@ -31,6 +31,11 @@ const Modal =({title,isOpen,setIsOpen,closeModal,children}:IProps) => {
                   <DialogTitle as="h3" className="text-lg font-medium leading-6 text-gray-900">
                     {title}
                   </DialogTitle>
+                  {description ? (                    
+                      <DialogDescription>
+                        {description}
+                      </DialogDescription>
+                  ): null}
                 
                   <div className="mt-4">
                     {children}

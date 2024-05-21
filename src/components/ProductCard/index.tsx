@@ -5,10 +5,27 @@ import Circle from "../ui/Circle"
 import Image from "../ui/Image"
 
 interface IProps {
-    product: IProduct
+    product: IProduct,
+    index:number,
+    openEditModal:() => void,
+    openDeleteProduct:() => void,
+    setProductToEdit:(product:IProduct) => void,
+    setIdxProductEdit:(index:number) => void
 }
-const ProductCard = (props: IProps) => {
-  const {title,description,price,imageUrl,category,colors} = props.product
+const ProductCard = ({product,index,setProductToEdit,setIdxProductEdit,openEditModal,openDeleteProduct}: IProps) => {
+  const {title,description,price,imageUrl,category,colors} = product
+
+  const editProduct = () => {
+    openEditModal()
+    setProductToEdit(product)
+    setIdxProductEdit(index)
+  }
+
+  const deleteProduct = () =>{
+    openDeleteProduct()
+    setProductToEdit(product)
+  }
+
   return (
     <div className="max-w-sm md:max-w-lg border rounded-md p-2 flex flex-col">
         <Image 
@@ -16,7 +33,7 @@ const ProductCard = (props: IProps) => {
             alt={title}
             classname="rounded-md h-52 w-full lg-object-cover mb-5"
         />
-        <h3 className="text-xl font-normal">{textSlice(description,20)}</h3>
+        <h3 className="text-xl font-normal">{textSlice(title,20)}</h3>
         <p>{textSlice(description)}</p>
         <div className="flex items-center my-4 space-x-2">
             { colors.map((color) => <Circle key={color} color={color} />) }
@@ -30,8 +47,8 @@ const ProductCard = (props: IProps) => {
             />
         </div>
         <div className="flex items-center justify-between gap-3 mt-5">
-            <Button classname="bg-green-700" onClick={()=> console.log("edit")}>Edit</Button>
-            <Button classname="bg-red-700" onClick={()=> console.log("delete")}>Delete</Button>
+            <Button classname="bg-green-700" onClick={()=> editProduct()}>Edit</Button>
+            <Button classname="bg-red-700" onClick={()=> deleteProduct()}>Delete</Button>
         </div>
     </div>
   )

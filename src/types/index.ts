@@ -1,0 +1,1 @@
+export type TYProductName = "title" | "description" | "price" | "imageUrl"

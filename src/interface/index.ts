@@ -7,7 +7,7 @@ export interface IProduct {
     colors: string[],
     category:{
         name:string,
-        image:string
+        imageUrl:string
     }
 }
 
@@ -17,4 +17,11 @@ export interface IFormInputs {
     name: "title" | "description" | "price" | "imageUrl",
     type:string,
     label:string
+}
+
+
+export interface ICategory {
+    id:string,
+    name:string,
+    imageUrl:string
 }
